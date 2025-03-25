@@ -14,7 +14,7 @@ from waypoint_extraction.extract_waypoints import (
     dp_waypoint_selection,
     backtrack_waypoint_selection,
 )
-from utils import plot_3d_trajectory
+from act.act_utils import plot_3d_trajectory
 
 num_waypoints = []
 num_frames = []

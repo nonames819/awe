@@ -2,7 +2,7 @@ import numpy as np
 import wandb
 from scipy.spatial.transform import Rotation
 
-from utils import put_text, remove_object
+from act.act_utils import put_text, remove_object
 
 import robosuite.utils.transform_utils as T
 
