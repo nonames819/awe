@@ -164,7 +164,7 @@ class TrainDiffusionTransformerHybridWorkspace(BaseWorkspace):
                         # device transfer
                         batch = dict_apply(
                             batch, lambda x: x.to(device, non_blocking=True)
-                        )
+                        ) # agent_image:torch.Size([64, 2, 3, 84, 84])  robot_hand_image:torch.Size([64, 2, 3, 84, 84]) eefpos:torch.Size([64, 2, 3]) eef_quat:torch.Size([64, 2, 4]) gripper:torch.Size([64, 2, 2]) action:torch.Size([64, 10, 10])
                         if train_sampling_batch is None:
                             train_sampling_batch = batch
 

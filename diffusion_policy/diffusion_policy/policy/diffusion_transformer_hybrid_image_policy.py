@@ -317,7 +317,7 @@ class DiffusionTransformerHybridImagePolicy(BaseImagePolicy):
         nobs = self.normalizer.normalize(batch["obs"])
         nactions = self.normalizer["action"].normalize(batch["action"])
         batch_size = nactions.shape[0]
-        horizon = nactions.shape[1]
+        horizon = nactions.shape[1] # predict horizen
         To = self.n_obs_steps
 
         # handle different ways of passing observation
@@ -330,7 +330,7 @@ class DiffusionTransformerHybridImagePolicy(BaseImagePolicy):
             )
             nobs_features = self.obs_encoder(this_nobs)
             # reshape back to B, T, Do
-            cond = nobs_features.reshape(batch_size, To, -1)
+            cond = nobs_features.reshape(batch_size, To, -1) # torch.Size([64, 2, 137]) TODO: 137
             if self.pred_action_steps_only:
                 start = To - 1
                 end = start + self.n_action_steps

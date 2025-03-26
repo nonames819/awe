@@ -1,7 +1,9 @@
 import h5py,os
 
-file_path = "/home/caohaidong/code/awe/robomimic/datasets/square/ph/low_dim.hdf5"
-output = "test/output_square.txt"
+task = "square"
+
+file_path = "/home/ubuntu/chd/code/awe/robomimic/datasets/"+task+"/ph/low_dim.hdf5"
+output = "test/output_"+task+"_new.txt"
 
 with open(output, 'w') as f:
 
