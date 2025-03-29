@@ -125,7 +125,7 @@ class TransformerForDiffusion(ModuleAttrMixin):
                 S = T_cond
                 t, s = torch.meshgrid(torch.arange(T), torch.arange(S), indexing="ij")
                 mask = t >= (
-                    s - 1
+                    s - 1 # 应该是因为第一个预测的action只能获得当前的obs，这里的n_hist_obs=2，如果n_hist_obs增大，它会变成一个右上三角为false的mask矩阵（其实就是dp原文中展示的mask图）
                 )  # add one dimension since time is the first token in cond
                 mask = (
                     mask.float()
@@ -322,20 +322,20 @@ class TransformerForDiffusion(ModuleAttrMixin):
             # encoder
             cond_embeddings = time_emb
             if self.obs_as_cond:
-                cond_obs_emb = self.cond_obs_emb(cond)
+                cond_obs_emb = self.cond_obs_emb(cond) # 137 to feat_dim (256 here)
                 # (B,To,n_emb)
                 cond_embeddings = torch.cat([cond_embeddings, cond_obs_emb], dim=1)
-            tc = cond_embeddings.shape[1]
+            tc = cond_embeddings.shape[1] # 1 for time, 2 for obs
             position_embeddings = self.cond_pos_emb[
                 :, :tc, :
             ]  # each position maps to a (learnable) vector
             x = self.drop(cond_embeddings + position_embeddings)
-            x = self.encoder(x)
+            x = self.encoder(x) # MLP with Mish activation
             memory = x
             # (B,T_cond,n_emb)
 
             # decoder
-            token_embeddings = input_emb
+            token_embeddings = input_emb # torch.Size([64, 10, 256])
             t = token_embeddings.shape[1]
             position_embeddings = self.pos_emb[
                 :, :t, :

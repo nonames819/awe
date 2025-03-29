@@ -65,11 +65,11 @@ class RobomimicReplayImageDataset(BaseImageDataset):
     ):
         rotation_transformer = RotationTransformer(
             from_rep="axis_angle", to_rep=rotation_rep
-        )
+        ) # transform tool: angle2 6d form
 
         replay_buffer = None
         if use_cache:
-            if use_waypoint:
+            if use_waypoint: # awe changed here
                 if constant_waypoint is None:
                     # cache_zarr_path = dataset_path + '.dp_waypoint.zarr.zip'
                     cache_zarr_path = dataset_path + ".dp_max_waypoint.zarr.zip"
@@ -127,9 +127,9 @@ class RobomimicReplayImageDataset(BaseImageDataset):
         for key, attr in obs_shape_meta.items():
             type = attr.get("type", "low_dim")
             if type == "rgb":
-                rgb_keys.append(key)
+                rgb_keys.append(key) # ['agentview_image', 'robot0_eye_in_hand_image']
             elif type == "low_dim":
-                lowdim_keys.append(key)
+                lowdim_keys.append(key) # ['robot0_eef_pos', 'robot0_eef_quat', 'robot0_gripper_qpos']
 
         # for key in rgb_keys:
         #     replay_buffer[key].compressor.numthreads=1
@@ -234,10 +234,10 @@ class RobomimicReplayImageDataset(BaseImageDataset):
         # since the rest will be discarded anyway.
         # when self.n_obs_steps is None
         # this slice does nothing (takes all)
-        T_slice = slice(self.n_obs_steps)
+        T_slice = slice(self.n_obs_steps) # 2
 
         obs_dict = dict()
-        for key in self.rgb_keys:
+        for key in self.rgb_keys: # ['agentview_image', 'robot0_eye_in_hand_image']
             # move channel last to channel first
             # T,H,W,C
             # convert uint8 image to float32
@@ -246,15 +246,15 @@ class RobomimicReplayImageDataset(BaseImageDataset):
             )
             # T,C,H,W
             del data[key]
-        for key in self.lowdim_keys:
+        for key in self.lowdim_keys: # ['robot0_eef_pos', 'robot0_eef_quat', 'robot0_gripper_qpos']
             obs_dict[key] = data[key][T_slice].astype(np.float32)
             del data[key]
 
         torch_data = {
-            "obs": dict_apply(obs_dict, torch.from_numpy),
-            "action": torch.from_numpy(data["action"].astype(np.float32)),
+            "obs": dict_apply(obs_dict, torch.from_numpy), # pics: torch.Size([2, 3, 84, 84]) low_dim: trans/rot/gripper: 3,4,2
+            "action": torch.from_numpy(data["action"].astype(np.float32)), # torch.Size([10, 10])
         }
-        return torch_data
+        return torch_data # 只有action的长度为horizen=10，其他为obs_step=2
 
 
 def _convert_actions(raw_actions, abs_action, rotation_transformer):
