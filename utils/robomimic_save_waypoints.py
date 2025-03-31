@@ -34,7 +34,7 @@ def main(args):
     env_meta["env_kwargs"]["controller_configs"]["control_delta"] = False
     env_meta["env_kwargs"]["controller_configs"]["multiplier"] = args.multiplier
 
-    env = EnvUtils.create_env_from_metadata(env_meta=env_meta, render_offscreen=True)
+    env = EnvUtils.create_env_from_metadata(env_meta=env_meta, render_offscreen=False)
 
     # load the dataset
     f = h5py.File(args.dataset, "r+")
@@ -70,7 +70,7 @@ def main(args):
 
         # load absolute actions
         try:
-            actions = f[f"data/{ep}/abs_actions"][()]
+            actions = f[f"data/{ep}/abs_actions"][()] # 7dims: 3+3+1
         except:
             print("No absolute actions found, need to convert first.")
             raise NotImplementedError

@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # data
-robomimic/datasets
+robomimic/datasets*
 data
 *.zip
 

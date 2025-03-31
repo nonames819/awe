@@ -14,10 +14,10 @@ def linear_interpolation(p1, p2, t):
 
 def point_line_distance(point, line_start, line_end):
     """Compute the shortest distance between a 3D point and a line segment defined by two 3D points"""
-    line_vector = line_end - line_start
-    point_vector = point - line_start
+    line_vector = line_end - line_start 
+    point_vector = point - line_start 
     # t represents the position of the orthogonal projection of the given point onto the infinite line defined by the segment
-    t = np.dot(point_vector, line_vector) / np.dot(line_vector, line_vector)
+    t = np.dot(point_vector, line_vector) / np.dot(line_vector, line_vector) # 算一下内积，计算要跟线段上哪个店计算距离
     t = np.clip(t, 0, 1)
     projection = linear_interpolation(line_start, line_end, t)
     return np.linalg.norm(point - projection)
@@ -41,7 +41,7 @@ def geometric_waypoint_trajectory(actions, gt_states, waypoints, return_list=Fal
     gt_quat = [p["robot0_eef_quat"] for p in gt_states]
 
     keypoints_pos = [actions[k, :3] for k in waypoints]
-    keypoints_quat = [gt_quat[k] for k in waypoints]
+    keypoints_quat = [gt_quat[k] for k in waypoints] # TODO：这里pos取了action来和gt比较，但rot还是使用的obs中得到的quat
 
     state_err = []
 
@@ -80,7 +80,7 @@ def geometric_waypoint_trajectory(actions, gt_states, waypoints, return_list=Fal
 
     if return_list:
         return total_traj_err(state_err), state_err
-    return total_traj_err(state_err)
+    return total_traj_err(state_err) # 原始代码选最大的
 
 
 def pos_only_geometric_waypoint_trajectory(
@@ -121,7 +121,7 @@ def pos_only_geometric_waypoint_trajectory(
     if return_list:
         return total_traj_err(state_err), state_err
     else:
-        return total_traj_err(state_err)
+        return total_traj_err(state_err) 
 
 
 def reconstruct_waypoint_trajectory(

@@ -127,7 +127,7 @@ if __name__ == "__main__":
     # set default base directory for downloads
     default_base_dir = args.download_dir
     if default_base_dir is None:
-        default_base_dir = os.path.join(robomimic.__path__[0], "../datasets")
+        default_base_dir = os.path.join(robomimic.__path__[0], "../datasets_temp")
 
     # load args
     download_tasks = args.tasks
