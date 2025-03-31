@@ -20,8 +20,8 @@ def evaluate_checkpoint(checkpoint, output_dir, device):
     ckpt_dir = os.path.dirname(checkpoint)
     
     # 为每个checkpoint创建单独的输出目录
-    checkpoint_output_dir = os.path.join(output_dir, os.path.splitext(ckpt_name)[0])
-    pathlib.Path(checkpoint_output_dir).mkdir(parents=True, exist_ok=True)
+    # checkpoint_output_dir = os.path.join(output_dir, os.path.splitext(ckpt_name)[0])
+    # pathlib.Path(checkpoint_output_dir).mkdir(parents=True, exist_ok=True)
     
     out_file = f"{os.path.splitext(ckpt_name)[0]}_eval_log.json"
     out_path = os.path.join(output_dir, out_file)
@@ -34,7 +34,7 @@ def evaluate_checkpoint(checkpoint, output_dir, device):
     cfg = payload['cfg']
     cls = hydra.utils.get_class(cfg._target_)
     
-    workspace = cls(cfg, output_dir=checkpoint_output_dir)
+    workspace = cls(cfg, output_dir=output_dir)
     workspace: BaseWorkspace
     workspace.load_payload(payload, exclude_keys=None, include_keys=None)
     
@@ -50,7 +50,7 @@ def evaluate_checkpoint(checkpoint, output_dir, device):
     # run eval
     env_runner = hydra.utils.instantiate(
         cfg.task.env_runner,
-        output_dir=checkpoint_output_dir)
+        output_dir=output_dir)
     runner_log = env_runner.run(policy)
     
     # dump log to json
@@ -70,9 +70,9 @@ def evaluate_checkpoint(checkpoint, output_dir, device):
     }
 
 @click.command()
-@click.option('-c', '--checkpoint', help='单个checkpoint路径或包含多个checkpoint的文件夹路径')
-@click.option('-o', '--output_dir', required=False, help='输出目录')
-@click.option('-d', '--device', default='cuda:0', help='使用的设备')
+@click.option('-c', '--checkpoint', help='single ckpt path or ckpt dir')
+@click.option('-o', '--output_dir', required=False, help='output dir')
+@click.option('-d', '--device', default='cuda:0', help='device')
 def main(checkpoint, output_dir, device):
     checkpoints_to_evaluate = []
     
@@ -88,12 +88,12 @@ def main(checkpoint, output_dir, device):
             checkpoints_to_evaluate = glob.glob(os.path.join(checkpoint, "**", "*.pt"), recursive=True)
         
         if not checkpoints_to_evaluate:
-            print(f"在目录 {checkpoint} 中未找到任何checkpoint文件")
+            print(f"Cannot find any .ckpt file in {checkpoint}")
             return
         
-        print(f"在目录中找到了 {len(checkpoints_to_evaluate)} 个checkpoint文件")
+        print(f"Got {len(checkpoints_to_evaluate)} .ckpt files in {checkpoint}")
     else:
-        print(f"输入的路径 {checkpoint} 既不是文件也不是目录")
+        print(f"{checkpoint} is not a ckpt file or dir")
         return
     
     # 设置输出目录
@@ -105,11 +105,13 @@ def main(checkpoint, output_dir, device):
             output_dir = os.path.join(run_dir, "eval")
         else:
             # 如果输入是目录
+            # ckpt_dir = os.path.dirname(checkpoint)
+            # run_dir = os.path.dirname(ckpt_dir)
             run_dir = os.path.dirname(checkpoint)
             output_dir = os.path.join(run_dir, "eval")
     
     if os.path.exists(output_dir):
-        click.confirm(f"输出路径 {output_dir} 已存在！是否覆盖?", abort=True)
+        click.confirm(f"output path {output_dir} already exists, rewrite it?", abort=True)
     
     pathlib.Path(output_dir).mkdir(parents=True, exist_ok=True)
     
@@ -123,7 +125,7 @@ def main(checkpoint, output_dir, device):
     summary_path = os.path.join(output_dir, 'all_checkpoints_summary.json')
     json.dump(all_results, open(summary_path, 'w'), indent=2, sort_keys=True)
     
-    print(f"所有评估完成。汇总结果保存在: {summary_path}")
+    print(f"All evaluation finished! Summary output stored in {summary_path}")
 
 if __name__ == '__main__':
     main()

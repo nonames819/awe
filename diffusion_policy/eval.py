@@ -42,9 +42,7 @@ def main(checkpoint, output_dir, device):
     print("Loading ckpt ......")
     payload = torch.load(open(checkpoint, 'rb'), pickle_module=dill)
     cfg = payload['cfg']
-    cls = hydra.utils.get_class(cfg._target_)
-
-    
+    cls = hydra.utils.get_class(cfg._target_)    
 
     workspace = cls(cfg, output_dir=output_dir)
     workspace: BaseWorkspace
