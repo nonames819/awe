@@ -71,7 +71,7 @@ def geometric_waypoint_trajectory(actions, gt_states, waypoints, return_list=Fal
                 end_keypoint_quat,
                 i,
                 len(segment_points_quat),
-            )
+            ) # 使用t/len表示该点在旋转序列中的位置
             state_err.append(pos_err + rot_err)
 
     # print the average and max error for pos and rot
