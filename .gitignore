@@ -130,7 +130,10 @@ dmypy.json
 
 # data
 robomimic/datasets*
+data/
 data
+dataset_info/
+data_example/
 *.zip
 
 # misc
