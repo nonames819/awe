@@ -5,6 +5,7 @@ import numpy as np
 import time
 import wandb
 import matplotlib.pyplot as plt
+import os
 
 import robomimic
 import robomimic.utils.obs_utils as ObsUtils
@@ -112,6 +113,8 @@ def main(args):
         # add video postfix (task, idx, constant_waypoint / waypoints)
         video_postfix = f"{args.task}-{idx}-"
         assert args.task in args.dataset and args.task in args.video_path
+        video_dir=os.path.dirname(args.video_path)
+        os.makedirs(video_dir, exist_ok=True)
 
         # set up the waypoint indices
         if args.auto_waypoint:

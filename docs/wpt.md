@@ -35,12 +35,12 @@ python example/robomimic_waypoint_replay.py --dataset=robomimic/datasets/can/ph/
     --plot_3d --auto_waypoint --err_threshold=0.005
 
 python example/robomimic_waypoint_replay.py --dataset=robomimic/datasets/lift/ph/low_dim.hdf5 \
-    --record_video --video_path video/lift_waypoint.mp4 --task=lift \
+    --record_video --video_path data_example/robomimic_awe/video/lift_waypoint.mp4 --task=lift \
     --plot_3d --auto_waypoint --err_threshold=0.005
 
 python example/robomimic_waypoint_replay.py --dataset=robomimic/datasets/square/ph/low_dim.hdf5 \
-    --record_video --video_path video/square_waypoint.mp4 --task=square \
-    --plot_3d --auto_waypoint --err_threshold=0.005
+    --record_video --video_path data_example/robomimic_awe/video/square_waypoint.mp4 --task=square \
+    --plot_3d --auto_waypoint --err_threshold=0.05
 ```
 
 # ACT
