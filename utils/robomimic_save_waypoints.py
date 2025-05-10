@@ -100,11 +100,13 @@ def main(args):
             f[f"data/{ep}/waypoints_{args.method}"] = waypoints
         except:
             # if the waypoints dataset already exists, ask the user if they want to overwrite
-            print("waypoints dataset already exists. Overwrite? (y/n)")
-            ans = input()
-            if ans == "y":
-                del f[f"data/{ep}/waypoints_{args.method}"]
-                f[f"data/{ep}/waypoints_{args.method}"] = waypoints
+            # print("waypoints dataset already exists. Overwrite? (y/n)")
+            # ans = input()
+            # if ans == "y":
+                # del f[f"data/{ep}/waypoints_{args.method}"]
+                # f[f"data/{ep}/waypoints_{args.method}"] = waypoints
+            del f[f"data/{ep}/waypoints_{args.method}"]
+            f[f"data/{ep}/waypoints_{args.method}"] = waypoints
 
     f.close()
     print(
