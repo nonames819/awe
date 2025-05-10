@@ -129,8 +129,8 @@ dmypy.json
 .pyre/
 
 # data
-robomimic/datasets
-data/
+robomimic/datasets*
+data
 *.zip
 
 # misc
@@ -144,3 +144,6 @@ video/
 # log
 robomimic/bc_trained_models*
 robomimic/robomimic/debug
+
+# txt
+*.txt

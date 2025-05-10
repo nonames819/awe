@@ -164,7 +164,7 @@ def dp_waypoint_selection(
     remove_obj=None,
     pos_only=False,
 ):
-    if actions is None:
+    if actions is None: # robomimic中，action是当前动作，gt_state是obs中的proprio.，两者都存在
         actions = copy.deepcopy(gt_states)
     elif gt_states is None:
         gt_states = copy.deepcopy(actions)
@@ -202,14 +202,14 @@ def dp_waypoint_selection(
         print("Error threshold is too small, returning all points as waypoints.")
         return list(range(1, num_frames))
 
-    # Populate the memoization table using an iterative bottom-up approach
-    for i in range(1, num_frames):
-        min_waypoints_required = float("inf")
+    # Populate the memoization table using an iterative bottom-up approach 
+    for i in range(1, num_frames): # 每次考虑一个点要不要加入wpt
+        min_waypoints_required = float("inf") 
         best_waypoints = []
 
-        for k in range(1, i):
-            # waypoints are relative to the subsequence
-            waypoints = [j - k for j in initial_waypoints if j >= k and j < i] + [i - k]
+        for k in range(1, i): # 考虑以k为开始，i为结尾的所有子段
+            # waypoints are relative to the subsequence， 当考虑的[k,i)包含某个或者某些initial_waypoint时，将其加入当前考虑的waypoint列表中，都转化成从k开始的索引
+            waypoints = [j - k for j in initial_waypoints if j >= k and j < i] + [i - k] 
 
             total_traj_err = func(
                 actions=actions[k : i + 1],
@@ -217,9 +217,9 @@ def dp_waypoint_selection(
                 waypoints=waypoints,
             )
 
-            if total_traj_err < err_threshold:
-                subproblem_waypoints_count, subproblem_waypoints = memo[k - 1]
-                total_waypoints_count = 1 + subproblem_waypoints_count
+            if total_traj_err < err_threshold: # 仍然不超过阈值
+                subproblem_waypoints_count, subproblem_waypoints = memo[k - 1] # 0~k-1的子问题
+                total_waypoints_count = 1 + subproblem_waypoints_count # 表示加入i作为新的wpt之后的wpt数量
 
                 if total_waypoints_count < min_waypoints_required:
                     min_waypoints_required = total_waypoints_count

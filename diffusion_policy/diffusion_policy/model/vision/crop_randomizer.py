@@ -93,7 +93,7 @@ class CropRandomizer(nn.Module):
                 crop_width=self.crop_width,
                 num_crops=self.num_crops,
                 pos_enc=self.pos_enc,
-            )
+            )            
             # [B, N, ...] -> [B * N, ...]
             return tu.join_dimensions(out, 0, 1)
         else:

@@ -104,7 +104,7 @@ class DiffusionTransformerHybridImagePolicy(BaseImagePolicy):
         )
 
         obs_encoder = policy.nets["policy"].nets["encoder"].nets["obs"]
-
+        # 首先对obs_enc做一些修改
         if obs_encoder_group_norm:
             # replace batch norm with group norm
             replace_submodules(
@@ -130,7 +130,7 @@ class DiffusionTransformerHybridImagePolicy(BaseImagePolicy):
                 ),
             )
 
-        # create diffusion model
+        # create diffusion model (the dim is dependent on whether the obs is used as codition)
         obs_feature_dim = obs_encoder.output_shape()[0]
         input_dim = action_dim if obs_as_cond else (obs_feature_dim + action_dim)
         output_dim = input_dim
@@ -317,7 +317,7 @@ class DiffusionTransformerHybridImagePolicy(BaseImagePolicy):
         nobs = self.normalizer.normalize(batch["obs"])
         nactions = self.normalizer["action"].normalize(batch["action"])
         batch_size = nactions.shape[0]
-        horizon = nactions.shape[1]
+        horizon = nactions.shape[1] # predict horizen
         To = self.n_obs_steps
 
         # handle different ways of passing observation
@@ -328,9 +328,9 @@ class DiffusionTransformerHybridImagePolicy(BaseImagePolicy):
             this_nobs = dict_apply(
                 nobs, lambda x: x[:, :To, ...].reshape(-1, *x.shape[2:])
             )
-            nobs_features = self.obs_encoder(this_nobs)
+            nobs_features = self.obs_encoder(this_nobs) # torch.Size([128, 137]) 其实就是对图片做了个裁剪处理，其余的不变，图片每个变成64维64+64+9=137
             # reshape back to B, T, Do
-            cond = nobs_features.reshape(batch_size, To, -1)
+            cond = nobs_features.reshape(batch_size, To, -1) # torch.Size([64, 2, 137]) 
             if self.pred_action_steps_only:
                 start = To - 1
                 end = start + self.n_action_steps

@@ -30,7 +30,8 @@ def read_hdf5(task):
 
 if __name__ == "__main__":
     # task: square, can, lift
-    task = ["square", "can", "lift"]
+    # task = ["square", "can", "lift"]
+    task = ["can"]
     for t in task:
         read_hdf5(t)
 

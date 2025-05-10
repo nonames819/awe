@@ -50,11 +50,13 @@ def main(args):
                     root[name] = waypoints
                 except:
                     # if the waypoints dataset already exists, ask the user if they want to overwrite
-                    print("waypoints dataset already exists. Overwrite? (y/n)")
-                    ans = input()
-                    if ans == "y":
-                        del root[name]
-                        root[name] = waypoints
+                    del root[name]
+                    root[name] = waypoints
+                    # print("waypoints dataset already exists. Overwrite? (y/n)")
+                    # ans = input()
+                    # if ans == "y":
+                    #     del root[name]
+                    #     root[name] = waypoints
 
             # visualize ground truth qpos and waypoints
             if args.plot_3d:

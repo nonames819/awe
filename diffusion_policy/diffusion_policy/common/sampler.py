@@ -159,7 +159,7 @@ class SequenceSampler:
 
                     pdb.set_trace()
             data = sample
-            if (sample_start_idx > 0) or (sample_end_idx < self.sequence_length):
+            if (sample_start_idx > 0) or (sample_end_idx < self.sequence_length): # 长度不够填充一下
                 data = np.zeros(
                     shape=(self.sequence_length,) + input_arr.shape[1:],
                     dtype=input_arr.dtype,
@@ -170,4 +170,4 @@ class SequenceSampler:
                     data[sample_end_idx:] = sample[-1]
                 data[sample_start_idx:sample_end_idx] = sample
             result[key] = data
-        return result
+        return result # 长度统一为n_data=10
