@@ -22,6 +22,11 @@ def main(args):
     env_meta = FileUtils.get_env_metadata_from_dataset(dataset_path=args.dataset)
     # env = EnvUtils.create_env_from_metadata(env_meta=env_meta, render_offscreen=True)
     env = EnvUtils.create_env_from_metadata(env_meta=env_meta, render_offscreen=False)
+    # test onscreen render
+    # env.reset()
+    # env.render() 
+    # robosuite_env = env.env
+    # robosuite_env.viewer.set_camera(camera_name="agentview")
 
     # load the dataset
     f = h5py.File(args.dataset, "r+")
@@ -55,6 +60,10 @@ def main(args):
 
         for i in range(len(states)):
             env.reset_to({"states": states[i]})
+
+            env.render()
+
+        
             # run controller
             robot.control(delta_actions[i], policy_step=True)
 

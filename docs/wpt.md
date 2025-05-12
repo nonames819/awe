@@ -26,6 +26,9 @@ python utils/robomimic_save_waypoints.py --dataset=robomimic/datasets/can/ph/low
 python utils/robomimic_save_waypoints.py --dataset=robomimic/datasets/lift/ph/low_dim.hdf5 --err_threshold=0.005
 
 python utils/robomimic_save_waypoints.py --dataset=robomimic/datasets/square/ph/low_dim.hdf5 --err_threshold=0.005
+
+# test
+python utils/robomimic_save_waypoints.py --dataset=robomimic/datasets_test/square/ph/low_dim.hdf5 --err_threshold=0.005
 ```
 
 * Replay waypoints (save 3 videos and 3D visualizations by default)

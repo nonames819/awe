@@ -41,7 +41,7 @@ def geometric_waypoint_trajectory(actions, gt_states, waypoints, return_list=Fal
     gt_quat = [p["robot0_eef_quat"] for p in gt_states]
 
     keypoints_pos = [actions[k, :3] for k in waypoints]
-    keypoints_quat = [gt_quat[k] for k in waypoints] # TODO：这里pos取了action来和gt比较，但rot还是使用的obs中得到的quat
+    keypoints_quat = [gt_quat[k] for k in waypoints] # TODO：这里pos取了action来和gt比较，但rot还是使用的obs中得到的quat ??? 我觉得有问题
 
     state_err = []
 

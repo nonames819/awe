@@ -12,6 +12,8 @@ from waypoint_extraction.extract_waypoints import (
     greedy_waypoint_selection,
     dp_waypoint_selection,
     backtrack_waypoint_selection,
+    heuristic_waypoint_selection,
+    dp_reconstruct_waypoint_selection,
 )
 
 num_waypoints = []
@@ -34,7 +36,11 @@ def main(args):
     env_meta["env_kwargs"]["controller_configs"]["control_delta"] = False
     env_meta["env_kwargs"]["controller_configs"]["multiplier"] = args.multiplier
 
+    # test onscreen render
     env = EnvUtils.create_env_from_metadata(env_meta=env_meta, render_offscreen=False)
+    # env.reset()
+    # robosuite_env = env.env
+    # robosuite_env.viewer.set_camera(camera_name="agentview")
 
     # load the dataset
     f = h5py.File(args.dataset, "r+")
@@ -82,6 +88,12 @@ def main(args):
             waypoint_selection = dp_waypoint_selection
         elif args.method == "backtrack":
             waypoint_selection = backtrack_waypoint_selection
+        elif args.method == "heuristic":
+            waypoint_selection = heuristic_waypoint_selection
+        elif args.method == "dp_reconstruct":
+            waypoint_selection = dp_reconstruct_waypoint_selection
+        else:
+            raise ValueError(f"Invalid method: {args.method}")
 
         waypoints = waypoint_selection(
             env=env,
