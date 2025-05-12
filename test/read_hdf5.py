@@ -8,15 +8,19 @@ def read_hdf5(task):
     with open(output, 'w') as f:
         def print_hdf5_structure(root, child, print_value = False):
             # print(root)
-            if root == '/data/demo_1' or root == '/mask': 
-                print_value = True
+            # if root == '/data/demo_1' or root == '/mask': 
+            #     print_value = True
             if isinstance(child, h5py.Group):
                 f.write(f"{root} - Group\n")
                 for key in child.keys():
                     print_hdf5_structure(f"{root}/{key}", child[key],print_value)
             elif isinstance(child, h5py.Dataset):
                 f.write(f"{root} - Dataset, Size: {child.shape}, Data type: {child.dtype}\n")
-                if print_value:
+                # if print_value:
+                #     f.write(f"{root} - value(index 0): {child[0][:]}\n")
+                if root[:12] == '/data/demo_0':
+                    f.write(f"{root} - value(index 0): {child[:][0]}\n")
+                if root[:5] == '/mask':
                     f.write(f"{root} - value: {child[:]}\n")
 
         with h5py.File(file_path, 'r') as file:
@@ -30,8 +34,8 @@ def read_hdf5(task):
 
 if __name__ == "__main__":
     # task: square, can, lift
-    # task = ["square", "can", "lift"]
-    task = ["can"]
+    task = ["square", "can", "lift"]
+    # task = ["can"]
     for t in task:
         read_hdf5(t)
 

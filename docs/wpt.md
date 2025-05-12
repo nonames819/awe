@@ -1,4 +1,6 @@
 # DP (Robomimic)
+python robomimic/robomimic/scripts/download_datasets.py --tasks lift can square 
+
 [TASK] = lift can square tool_hang transport
 
 * Convert delta actions to absolute actions
@@ -10,6 +12,9 @@ python utils/robomimic_convert_action.py --dataset=robomimic/datasets/can/ph/low
 python utils/robomimic_convert_action.py --dataset=robomimic/datasets/lift/ph/low_dim.hdf5
 
 python utils/robomimic_convert_action.py --dataset=robomimic/datasets/square/ph/low_dim.hdf5
+
+# test
+python utils/robomimic_convert_action.py --dataset=robomimic/datasets_test/square/ph/low_dim.hdf5
 ```
 
 * Save waypoints
@@ -32,11 +37,11 @@ python example/robomimic_waypoint_replay.py --dataset=robomimic/datasets/[TASK]/
 
 python example/robomimic_waypoint_replay.py --dataset=robomimic/datasets/can/ph/low_dim.hdf5 \
     --record_video --video_path video/can_waypoint.mp4 --task=can \
-    --plot_3d --auto_waypoint --err_threshold=0.005
+    --plot_3d --auto_waypoint --err_threshold=0.005 --preload_auto_waypoint
 
 python example/robomimic_waypoint_replay.py --dataset=robomimic/datasets/lift/ph/low_dim.hdf5 \
     --record_video --video_path data_example/robomimic_awe/video/lift_waypoint.mp4 --task=lift \
-    --plot_3d --auto_waypoint --err_threshold=0.005
+    --plot_3d --auto_waypoint --err_threshold=0.005 --preload_auto_waypoint
 
 python example/robomimic_waypoint_replay.py --dataset=robomimic/datasets/square/ph/low_dim.hdf5 \
     --record_video --video_path data_example/robomimic_awe/video/square_waypoint.mp4 --task=square \

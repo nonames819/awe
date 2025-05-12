@@ -24,22 +24,22 @@ from waypoint_extraction.extract_waypoints import (
 
 def main(args):
     # set up wandb
-    if args.wandb:
-        if args.wandb_run_name is None:
-            run_name = args.video_path.split("/")[-1].split(".")[0]
-            run_name += f"-{args.task}-idx_{args.start_idx}_{args.end_idx}"
-            if args.auto_waypoint:
-                run_name += f"-auto_threshold_{args.err_threshold}"
-            elif args.constant_waypoint is not None:
-                run_name += f"-constant_waypoint_{args.constant_waypoint}"
-        else:
-            run_name = args.wandb_run_name
-        wandb.init(
-            project=args.wandb_project,
-            entity=args.wandb_entity,
-            name=run_name,
-            config=args,
-        )
+    # if args.wandb:
+    #     if args.wandb_run_name is None:
+    #         run_name = args.video_path.split("/")[-1].split(".")[0]
+    #         run_name += f"-{args.task}-idx_{args.start_idx}_{args.end_idx}"
+    #         if args.auto_waypoint:
+    #             run_name += f"-auto_threshold_{args.err_threshold}"
+    #         elif args.constant_waypoint is not None:
+    #             run_name += f"-constant_waypoint_{args.constant_waypoint}"
+    #     else:
+    #         run_name = args.wandb_run_name
+    #     wandb.init(
+    #         project=args.wandb_project,
+    #         entity=args.wandb_entity,
+    #         name=run_name,
+    #         config=args,
+    #     )
 
     # create two environments for delta and absolute control, respectively
     # this is useful for converting the default delta actions to absolute actions

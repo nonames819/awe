@@ -20,7 +20,8 @@ def main(args):
     )
     ObsUtils.initialize_obs_utils_with_obs_specs(obs_modality_specs=dummy_spec)
     env_meta = FileUtils.get_env_metadata_from_dataset(dataset_path=args.dataset)
-    env = EnvUtils.create_env_from_metadata(env_meta=env_meta, render_offscreen=True)
+    # env = EnvUtils.create_env_from_metadata(env_meta=env_meta, render_offscreen=True)
+    env = EnvUtils.create_env_from_metadata(env_meta=env_meta, render_offscreen=False)
 
     # load the dataset
     f = h5py.File(args.dataset, "r+")
