@@ -1,6 +1,15 @@
 import numpy as np
 import wandb
 from scipy.spatial.transform import Rotation
+from pytorch3d.transforms import (
+    euler_angles_to_matrix,
+    matrix_to_euler_angles,
+    quaternion_to_matrix,
+    matrix_to_quaternion,
+    axis_angle_to_matrix, 
+    matrix_to_axis_angle
+)
+import torch
 
 from utils import put_text, remove_object
 
@@ -42,6 +51,50 @@ def geometric_waypoint_trajectory(actions, gt_states, waypoints, return_list=Fal
 
     keypoints_pos = [actions[k, :3] for k in waypoints]
     keypoints_quat = [gt_quat[k] for k in waypoints] # TODO：这里pos取了action来和gt比较，但rot还是使用的obs中得到的quat ??? 我觉得有问题
+    
+    # test
+    # square中两者似乎差了一个z轴方向的90度， TODO：是不是坐标系的原因
+    # print("====Test quat====")
+    # quat_scipy = [Rotation.from_rotvec(actions[k, 3:6]).as_quat() for k in waypoints]
+    # quat_torch = [matrix_to_quaternion(axis_angle_to_matrix(torch.tensor(actions[k, 3:6], dtype=torch.float32).unsqueeze(0))).squeeze(0) for k in waypoints]
+    # print("action quat converted by torch:", quat_torch[0]) # wxyz e.g.: tensor([0.0423, 0.6956, 0.7163, 0.0362])
+    # print("action quat converted by scipy:", quat_scipy[0]) # xyzw e.g.: [0.69557001 0.71630017 0.03620117 0.04225985]
+    # print("gt states quat:", keypoints_quat[0])
+    # print("action quat converted by torch:", quat_torch[1])
+    # print("action quat converted by scipy:", quat_scipy[1])
+    # print("gt states quat:", keypoints_quat[1])
+
+    # print("====Test rotvec====")
+    # rotvec_scipy = [Rotation.from_quat(keypoints_quat[k]).as_rotvec() for k in waypoints]
+    # rotvec_torch = [matrix_to_axis_angle(quaternion_to_matrix(torch.tensor(keypoints_quat[k][[3,0,1,2]], dtype=torch.float32).unsqueeze(0))).squeeze(0) for k in waypoints]
+    # print("gt states rotvec converted by scipy:", rotvec_scipy[0])
+    # print("gt states rotvec converted by torch:", rotvec_torch[0])
+    # print("action rot:", actions[0, 3:6])
+    # print("gt states rotvec converted by scipy:", rotvec_scipy[1])
+    # print("gt states rotvec converted by torch:", rotvec_torch[1])
+    # print("action rot:", actions[1, 3:6])
+    
+    # print("====Test euler====")
+    # gt_euler_scipy = [Rotation.from_quat(keypoints_quat[k]).as_euler('xyz', degrees=True) for k in waypoints]
+    # gt_euler_torch = [matrix_to_euler_angles(quaternion_to_matrix(torch.tensor(keypoints_quat[k][[3,0,1,2]], dtype=torch.float32).unsqueeze(0)), convention='XYZ').squeeze(0) for k in waypoints]
+    # action_euler_torch = [matrix_to_euler_angles(axis_angle_to_matrix(torch.tensor(actions[k, 3:6], dtype=torch.float32).unsqueeze(0)), convention='XYZ').squeeze(0) for k in waypoints]
+    # action_euler_scipy = [Rotation.from_rotvec(actions[k, 3:6]).as_euler('xyz', degrees=True) for k in waypoints]
+    # print("index 0:")
+    # print("gt states euler converted by scipy:", gt_euler_scipy[0]) # angle
+    # print("gt states euler converted by torch:", gt_euler_torch[0]) # radian
+    # print("gt states euler torch radian to degree:", gt_euler_torch[0] * 180 / np.pi)
+    # print("action euler converted by scipy:", action_euler_scipy[0])
+    # print("action euler converted by torch:", action_euler_torch[0])
+    # print("action euler converted by torch radian to degree:", action_euler_torch[0] * 180 / np.pi)
+
+    # print("index 1:")
+    # print("gt states euler converted by scipy:", gt_euler_scipy[1])
+    # print("gt states euler converted by torch:", gt_euler_torch[1])
+    # print("gt states euler torch radian to degree:", gt_euler_torch[1] * 180 / np.pi)
+    # print("action euler converted by scipy:", action_euler_scipy[1])
+    # print("action euler converted by torch:", action_euler_torch[1])
+    # print("action euler converted by torch radian to degree:", action_euler_torch[1] * 180 / np.pi)
+    # test end
 
     state_err = []
 
