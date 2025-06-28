@@ -20,13 +20,15 @@ def main(args):
     )
     ObsUtils.initialize_obs_utils_with_obs_specs(obs_modality_specs=dummy_spec)
     env_meta = FileUtils.get_env_metadata_from_dataset(dataset_path=args.dataset)
+
     env = EnvUtils.create_env_from_metadata(env_meta=env_meta, render_offscreen=True)
+
     # env = EnvUtils.create_env_from_metadata(env_meta=env_meta, render_offscreen=False)
     # test onscreen render
-    # env.reset()
-    # env.render() 
-    # robosuite_env = env.env
+    env.reset()
+    robosuite_env = env.env
     # robosuite_env.viewer.set_camera(camera_name="agentview")
+    env.render() 
 
     # load the dataset
     f = h5py.File(args.dataset, "r+")
@@ -61,11 +63,10 @@ def main(args):
         for i in range(len(states)):
             env.reset_to({"states": states[i]})
 
-            # env.render()
+            env.render()
 
         
             # run controller
-            # print("delta action:", delta_actions[i])
             robot.control(delta_actions[i], policy_step=True)
 
             if first:
@@ -75,8 +76,6 @@ def main(args):
             # read pos and ori from robots
             action_pos[i] = controller.ee_pos
             action_ori[i] = Rotation.from_matrix(controller.ee_ori_mat).as_rotvec()
-
-            # print("abs action:", action_pos[i], action_ori[i], action_gripper[i])
 
             # record low dim states
             new_obs = env.get_observation()
@@ -118,7 +117,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--end_idx",
         type=int,
-        default=199,
+        default=0,
         help="(optional) end index of the trajectory to playback",
     )
 
